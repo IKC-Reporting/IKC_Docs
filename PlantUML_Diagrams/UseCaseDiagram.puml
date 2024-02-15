@@ -1,0 +1,51 @@
+@startuml IKC Entity Relationships
+title IKC App Networking Map
+!theme vibrant
+skinparam linetype polyline
+skinparam actorStyle awesome
+
+
+package intOrg as "Internal Organization"{
+    intUser as "Internal User"
+    note bottom of intUser
+        may not be needed?
+    end note
+    intAdmin as "Internal Org Admin"
+}
+
+package extOrg as "Industry Partner / Community Member"{
+    orgUser as "External User"
+    orgAdmin as "External Org Admin"
+}
+
+
+package site as "Website" {
+    usecase login as "Log into site"
+    usecase orgAssign as "Add organization to project"
+    usecase projAssign as "Assign internal Admin to project"
+    usecase createProj as "Create Project"
+
+    usecase addHourly as "Submit hourly contribution"
+    usecase addOther as "Submit non-hourly contribution"
+    usecase approve as "Approve of submitted contribution"
+    usecase finalSubmit as "Submit / sign final contribution report"
+}
+
+orgUser ---> login
+orgAdmin ---> login
+intUser ---> login
+intAdmin ---> login
+
+intAdmin ---> orgAssign
+intAdmin ---> projAssign
+intAdmin ---> createProj
+
+orgUser ---> addHourly
+orgUser ---> addOther
+
+orgAdmin ---> addHourly
+orgAdmin ---> addOther
+orgAdmin ---> approve
+orgAdmin ---> finalSubmit
+
+@enduml

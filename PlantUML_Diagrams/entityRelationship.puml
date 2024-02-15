@@ -1,0 +1,81 @@
+@startuml IKC Schema
+title IKC App Entity Relationship Diagram
+!theme vibrant
+skinparam linetype polyline
+skinparam ConditionEndStyle hline
+
+entity project {
+    * ProjectTitle
+    * ProjectNumber
+    * Funding
+    * projectStartDate
+    * projectEndDate
+    * projectPartners: [partnerOrg]
+    * ikcReports: [ikcReport]
+}
+
+entity contributor {
+    * annualSalary
+    * dailyHours
+    * benefitRatePercentage
+    * partnerOrg
+}
+
+entity partnerOrg {
+    * partnerName
+    contributors: [contributor]
+}
+
+partnerOrg }o--|{ project
+partnerOrg ||--|{ contributor
+
+entity ikcReport {
+    * partnerName
+    * submittedby: contributor
+    * ikcReportStartDate
+    * ikcReportEndDate
+    employeeHours: [hourContribItems]
+    otherContributions: [otherContribItems]
+
+    submissionData
+}
+
+ikcReport }o..|| project 
+ikcReport }o..|| partnerOrg
+
+entity submissionData {
+    * ikcReport
+    * nameOfRep
+    * signatureOfRep
+    * date
+}
+
+submissionData |o--|| ikcReport
+
+
+entity hourContribItems {
+    * employee: contributor
+    * hoursPerMonth: [hourLog]
+    * totalHours
+    * hourlyAmount
+    * totalAmount
+}
+
+hourContribItems }o--|| ikcReport
+
+entity hourLog {
+    * hours
+    * month
+}
+
+hourLog }|--|| hourContribItems
+
+entity otherContribItems {
+    * itemName
+    * date
+    * details
+    * value
+}
+otherContribItems }o--|| ikcReport
+
+@enduml

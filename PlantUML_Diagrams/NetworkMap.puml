@@ -1,0 +1,83 @@
+@startuml IKC Network Map
+title IKC App Networking Map
+!theme vibrant
+skinparam linetype polyline
+
+' #line:blue;text:blue
+<style>
+cloud {
+    BackgroundColor lightYellow
+}
+
+folder {
+    BackgroundColor lightGreen
+}
+
+node {
+    BackgroundColor lightBlue
+}
+</style>
+
+actor eu as "External User" #line:green;text:green
+note bottom of eu 
+pending info on external access
+end note
+
+ node ad as "Auth Daemon" #line:blue;text:blue
+ note bottom of ad 
+    may be external or not connected
+end note
+
+cloud inet as "Internal Network"{
+    actor iu as "Internal User" #line:green;text:green  
+    actor admin as "Administrator" #line:green;text:green
+
+    boundary net as "WAN" #line:red;text:green
+
+    folder cc as "Container Cluster" {
+        node fe as "Front End" #line:blue;text:blue
+        node be as "Back End" #line:blue;text:blue
+
+        database ldb as "Local Database" #line:blue;text:blue
+        database sc as "Session Cache" #line:blue;text:blue
+
+        note bottom of sc 
+            may not be manditory but could be preferred if many
+                users are expected w/ load balanced backend.
+            1* not clear on if backend, frontend, or session cache
+                triggers the auth request...
+        end note
+
+       
+    }
+
+    database odb as "Organization Database" #line:blue;text:blue
+
+    note bottom of odb
+    A: if local DB key given, but no organization DB key.
+    B: if organization DB key given, but no local DB key.
+    C: if both local and organization DB key given.
+    end note
+
+}
+
+eu -le- net
+net <-do-> fe
+net <-do-> ad
+
+iu <-do-> fe
+admin <-do-> fe
+
+fe <-do-> be
+
+be <..> ldb : ""A, C""
+be <..> odb : ""B, C""
+ldb <.. odb :""C, Initialize local db \nfrom org db?""
+
+be <..> ad :  ""1*""
+be <..> sc : ""1*""
+ad <..> sc : ""1*""
+
+ad <--> odb
+
+@enduml

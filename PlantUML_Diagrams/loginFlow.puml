@@ -1,0 +1,52 @@
+@startuml IKC Login Flow
+title IKC App Networking Map
+!theme vibrant
+skinparam linetype polyline
+skinparam ConditionEndStyle hline
+
+start
+if(has account?) then (no)
+    repeat :send one time link to person;
+        :set local auth or link to google/azure;
+        
+        note right
+            may instead prefer having only
+            local accounts within conestga
+            for initalizing this, then require
+            a google/azure for all external?
+        end note
+        :initalize organization for user and
+         add individual email to project;
+        repeat while (account creation successful?) is (false)
+        ->true;
+        :accont created;
+    else (true)
+    
+    endif
+label login
+while (access site) is (no session)
+    :prompt login using azure, google, or local account;
+
+    if (authentication result is valid) then (no)
+    else (yes)
+        if (has recognized email or domain) then (no)
+        else (yes)
+        :create session;
+        break
+
+        endif
+    endif
+    :repeat login;
+    note left
+        maybe set login limits?
+    end note
+endwhile (has session)
+
+if(assigned to a project?)then (yes)
+else (no)
+    end
+endif
+:allow access;
+
+stop
+@enduml
