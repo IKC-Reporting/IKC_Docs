@@ -1,4 +1,4 @@
-@startuml IKC Network Map
+@startuml IKC App Networking Map
 title IKC App Networking Map
 !theme vibrant
 skinparam linetype polyline

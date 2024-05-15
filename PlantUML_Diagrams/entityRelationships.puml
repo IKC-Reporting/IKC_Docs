@@ -1,5 +1,5 @@
-@startuml IKC Entity Relationships
-title IKC App Networking Map
+@startuml IKC App Entity Relationships
+title IKC App Entity Relationships
 !theme vibrant
 skinparam linetype polyline
 skinparam actorStyle awesome

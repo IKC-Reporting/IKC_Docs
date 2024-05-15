@@ -1,13 +1,14 @@
-@startuml IKC Login Flow
-title IKC App Networking Map
+@startuml IKC App Login Flow
+title IKC App Login Flow
 !theme vibrant
 skinparam linetype polyline
 skinparam ConditionEndStyle hline
 
 start
 if(has account?) then (no)
-    repeat :send one time link to person;
-        :set local auth or link to google/azure;
+    repeat 
+        #pink:send one time link to person;
+        :set up account;
         
         note right
             may instead prefer having only
@@ -15,30 +16,50 @@ if(has account?) then (no)
             for initalizing this, then require
             a google/azure for all external?
         end note
-        :initalize organization for user and
-         add individual email to project;
+
+        if(local auth or google/azure?) then (local auth)
+            :require email, and phone number;
+        else (google/azure auth)
+            :require google/azure connection request;
+        endif
+        :request addition to a organization
+        and project to administrator;
+        note right
+            maybe one time link is admin
+            specific so it knows who to notify?
+        end note
+
         repeat while (account creation successful?) is (false)
         ->true;
-        :accont created;
+        #paleGreen:accont created;
     else (true)
     
     endif
 label login
 while (access site) is (no session)
-    :prompt login using azure, google, or local account;
+    #lightYellow:prompt login using azure, google
+    or local account;
+    if(is local or google/azure login?) then (local login)
+        :request username/email and password;
+        :send OTP by text for extra authentication;
+    else (azure/google login)
+        :trigger google/azure login request;
+    endif
 
     if (authentication result is valid) then (no)
     else (yes)
         if (has recognized email or domain) then (no)
         else (yes)
-        :create session;
+        #paleGreen:create session;
         break
 
         endif
     endif
-    :repeat login;
+    #pink:repeat login attempt;
     note left
         maybe set login limits?
+        will also need to remeber which login
+        type to redirect back properly.
     end note
 endwhile (has session)
 
@@ -46,7 +67,7 @@ if(assigned to a project?)then (yes)
 else (no)
     end
 endif
-:allow access;
+#paleGreen:allow access;
 
 stop
 @enduml

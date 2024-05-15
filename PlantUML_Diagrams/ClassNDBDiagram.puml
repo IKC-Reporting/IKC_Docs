@@ -1,5 +1,5 @@
-@startuml IKC Schema
-title IKC App Entity Relationship Diagram
+@startuml IKC App Class/Database Diagram
+title IKC App Class/Database Diagram
 !theme vibrant
 skinparam linetype polyline
 skinparam ConditionEndStyle hline
