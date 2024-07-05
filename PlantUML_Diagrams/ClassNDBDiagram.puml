@@ -1,7 +1,7 @@
-@startuml IKC Schema
-title IKC App Entity Relationship Diagram
+@startuml IKC App Class/Database Diagram
+title IKC App Class/Database Diagram
 !theme vibrant
-skinparam linetype polyline
+skinparam linetype ortho
 skinparam ConditionEndStyle hline
 
 entity project {
@@ -34,8 +34,7 @@ entity ikcReport {
     * submittedby: contributor
     * ikcReportStartDate
     * ikcReportEndDate
-    employeeHours: [hourContribItems]
-    otherContributions: [otherContribItems]
+    contributions: [contribItems]
 
     submissionData
 }
@@ -53,29 +52,39 @@ entity submissionData {
 submissionData |o--|| ikcReport
 
 
-entity hourContribItems {
-    * employee: contributor
-    * hoursPerMonth: [hourLog]
-    * totalHours
-    * hourlyAmount
-    * totalAmount
-}
-
-hourContribItems }o--|| ikcReport
-
-entity hourLog {
-    * hours
-    * month
-}
-
-hourLog }|--|| hourContribItems
-
-entity otherContribItems {
-    * itemName
+entity contribItem {
+    * id
+    * correlationId: {contributorId, projectId}
     * date
     * details
+}
+
+contribItem }o--|| ikcReport
+
+entity hourContribution {
+    * id {contribItemId}
+    * hours
+    * hourlyPay
+    * benefitRatePercentage
+}
+
+entity otherContribution {
+    * id {contribItemId}
+    * itemName
     * value
 }
-otherContribItems }o--|| ikcReport
+
+note as idNote
+id are being inherited as a foreignKey from contribItem
+as it will be acting as the parent table
+end note
+
+idNote .. hourContribution
+idNote .. otherContribution
+
+otherContribution --|> contribItem
+hourContribution --|> contribItem
+contributor ||--o{ contribItem
+project ||--o{ contribItem
 
 @enduml

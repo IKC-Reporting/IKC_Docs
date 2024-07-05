@@ -1,0 +1,20 @@
+@startwbs IKC WorkflowHierarchy
+title IKC App Workflow, Development Hierarchy
+!theme vibrant
+skinparam linetype polyline
+skinparam ConditionEndStyle hline
+* Initial Documentation, use cases
+** Initial Css, base styling
+** Login + Authentication
+** Backend Data Mocking
+*** View Organization
+**** View Project
+*** View Profile
+*** Backend Implementation
+**** Azure API connection
+**** Data Storage
+***** Add User
+****** Add Organization
+******* Add Project
+******** Add Contribution
+@endwbs
